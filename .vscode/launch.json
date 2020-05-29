@@ -10,7 +10,11 @@
             "preLaunchTask": "make",
             "request": "launch",
             "program": "${workspaceFolder}/a2.exe",
-            "args": ["p1a"],
+            "args": [
+                "p1a",
+                "<",
+                "tests/p1a-in-1.txt"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

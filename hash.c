@@ -8,6 +8,7 @@
 
 #include "hash.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 
 // Implements a solution to Problem 1 (a), which reads in from stdin:
@@ -19,12 +20,60 @@
 // And outputs (to stdout) the hash values of the N strings 1 per line.
 void problem_1_a() {
   // TODO: Implement Me!
-	printf("hello worlld");
+	int n, m;
+  char c;
+  scanf("%d %d\n", &n, &m);
+  
+  printf("%d %d\n", n, m);
+  while((c = getchar()))
+  {
+    if(c == '\n' || c == ' ')
+    {
+      break;
+    }
+    printf("%d\n", characterMapping(c));
 
-  printf("hello worlld");
 
+  }
+
+  printf("End");
+}
+
+int characterMapping(char c)
+{
+  
+  if(isLower(c))
+  {
+    c = c - 'a';
+  }
+  else if (isUpper(c))
+  {
+    c = c - 'A' + 26;
+  
+  }
+  return c;
+}
+
+
+int isLower(char c)
+{
+  if(c >= 'a' && c <= 'z')
+  {
+    return true;
+  }
+  return false;
 
 }
+
+int isUpper(char c)
+{
+  if(c >= 'A' && c <= 'Z')
+  {
+    return true;
+  }
+  return false;
+}
+
 
 // Implements a solution to Problem 1 (b), which reads in from stdin:
 //   N M K

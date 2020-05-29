@@ -9,6 +9,8 @@
 #ifndef HASH_H
 #define HASH_H
 
+
+
 // Implements a solution to Problem 1 (a), which reads in from stdin:
 //   N M
 //   str_1
@@ -17,6 +19,9 @@
 //   str_N
 // And outputs (to stdout) the hash values of the N strings 1 per line.
 void problem_1_a();
+int isLower(char c);
+int isUpper(char c);
+int characterMapping(char c);
 
 // Implements a solution to Problem 1 (b), which reads in from stdin:
 //   N M K
