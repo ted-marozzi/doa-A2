@@ -9,6 +9,9 @@
 #include "hash.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
+#include <stdlib.h>
+
 
 
 // Implements a solution to Problem 1 (a), which reads in from stdin:
@@ -20,24 +23,68 @@
 // And outputs (to stdout) the hash values of the N strings 1 per line.
 void problem_1_a() {
   // TODO: Implement Me!
-	int n, m;
+	int n, m, i, j = 0, k, sum = 0;
   char c;
+  char* line = malloc(sizeof(char));
   scanf("%d %d\n", &n, &m);
-  
   printf("%d %d\n", n, m);
-  while((c = getchar()))
+  // For each word
+  for(i = 0; i < n ; i++)
   {
-    if(c == '\n' || c == ' ')
+    
+    // For each char in each word
+    while((c = getchar()))
     {
-      break;
+      if(c == '\n' || c == ' ')
+      {
+        break;
+      }
+      int val = characterMapping(c);
+      printf("%c: ", c);
+      printf("%d\n", val);
+      line = realloc(line, sizeof(char)*(j+1));
+      line[j] = c;
+      j++;
     }
-    printf("%d\n", characterMapping(c));
 
+    for(k = 0; k < j ; k++)
+    {
+      sum = sum + (characterMapping(line[k])*(int)pow(pow(2,6),j-1-k))%m;
+    }
+
+    printf("sum is %d\n", sum);
+
+    sum = 0;
+    j = 0;
 
   }
 
-  printf("End");
+
 }
+
+void decToBinary(int n) 
+{ 
+  // array to store binary number 
+  int binaryNum[32]; 
+
+  // counter for binary array 
+  int i = 0; 
+  while (n > 0) { 
+
+    // storing remainder in binary array 
+    binaryNum[i] = n % 2; 
+    n = n / 2; 
+    i++; 
+  } 
+
+  // printing binary array in reverse order 
+  for (int j = i - 1; j >= 0; j--)
+  {
+    printf("%d", binaryNum[j]);
+  }
+  printf("\n");
+
+} 
 
 int characterMapping(char c)
 {
@@ -51,6 +98,11 @@ int characterMapping(char c)
     c = c - 'A' + 26;
   
   }
+  else
+  {
+    c = c + 4;
+  }
+  
   return c;
 }
 

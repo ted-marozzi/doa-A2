@@ -16,7 +16,7 @@
             "args": [
                 "p1a",
                 "<",
-                "tests/p1a-in-1.txt"
+                "tests/p1a-in-2.txt"
 
             ],
             "type": "shell",

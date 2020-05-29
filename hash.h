@@ -22,6 +22,7 @@ void problem_1_a();
 int isLower(char c);
 int isUpper(char c);
 int characterMapping(char c);
+void decToBinary(int n) ;
 
 // Implements a solution to Problem 1 (b), which reads in from stdin:
 //   N M K
