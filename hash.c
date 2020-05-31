@@ -6,6 +6,10 @@
  * implementation by <Insert Name Here>
  */
 
+
+//pscp *.c *.h tests/*.txt Makefile emarozzi@dimefox.eng.unimelb.edu.au:COMP20007/A2/
+
+
 #include "hash.h"
 #include <stdio.h>
 #include <stdbool.h>
@@ -23,35 +27,35 @@
 // And outputs (to stdout) the hash values of the N strings 1 per line.
 void problem_1_a() {
   // TODO: Implement Me!
-  hash_string_t* string = malloc(sizeof(*string));
+  h_string_t* h_string = malloc(sizeof(*h_string));
   int n, m, i;
-  initialiseHashString(string);
+  initialise_h_string(h_string);
   scanf("%d %d\n", &n, &m);
   // For each word
   
   for(i = 0; i < n ; i++)
   {
-    calculateHash(string, m);
-    printf("%d\n", string->sum);
+    calculate_hash(h_string, m);
+    printf("%d\n", h_string->sum);
   }
   
 
-  free(string->stringArr);
-  free(string);
+  free(h_string->string_arr);
+  free(h_string);
 
 
 }
 
-void initialiseHashString(hash_string_t* string)
+void initialise_h_string(h_string_t* h_string)
 {
   
-  string->size = -1;
-  string->stringArr = malloc(sizeof(string -> stringArr)*0);
-  string->sum = -1;
+  h_string->size = -1;
+  h_string->string_arr = malloc(sizeof(h_string -> string_arr)*0);
+  h_string->sum = -1;
 
 }
 
-void getString(hash_string_t* string)
+void get_string(h_string_t* h_string)
 {
   char c;
   int j = 0;
@@ -63,48 +67,48 @@ void getString(hash_string_t* string)
     {
       break;
     }
-    string->stringArr = realloc(string->stringArr, sizeof(char*)*(j+1));
-    string->stringArr[j] = c;
+    h_string->string_arr = realloc(h_string->string_arr, sizeof(char*)*(j+1));
+    h_string->string_arr[j] = c;
     j++;
 
   }
 
-  string->size = j;
+  h_string->size = j;
 
 
 }
 
 
-// Returns array of hash and string length;
-void calculateHash(hash_string_t *string, int m)
+// Returns array of hash and h_string length;
+void calculate_hash(h_string_t *h_string, int m)
 {
   int k, sum = 0;
 
-  getString(string);
+  get_string(h_string);
 
-  sum = characterMapping(string -> stringArr[0]);
+  sum = character_mapping(h_string -> string_arr[0]);
 
 
-  for(k = 1; k < string->size; k++)
+  for(k = 1; k < h_string->size; k++)
   {
-    sum = ((sum*64%m)+characterMapping(string -> stringArr[k])%m );
+    sum = ((sum*64%m)+character_mapping(h_string -> string_arr[k])%m );
   }
   sum = sum%m;
 
 
-  string->sum = sum;
+  h_string->sum = sum;
 
 }
 
 
-int characterMapping(char c)
+int character_mapping(char c)
 {
   
-  if(isLower(c))
+  if(is_lower(c))
   {
     c = c - 'a';
   }
-  else if (isUpper(c))
+  else if (is_upper(c))
   {
     c = c - 'A' + 26;
   
@@ -118,7 +122,7 @@ int characterMapping(char c)
 }
 
 
-int isLower(char c)
+int is_lower(char c)
 {
   if(c >= 'a' && c <= 'z')
   {
@@ -128,7 +132,7 @@ int isLower(char c)
 
 }
 
-int isUpper(char c)
+int is_upper(char c)
 {
   if(c >= 'A' && c <= 'Z')
   {
@@ -144,7 +148,7 @@ int isUpper(char c)
 //   str_2
 //   ...
 //   str_N
-// Each string is inputed (in the given order) into a hash table with size
+// Each h_string is inputed (in the given order) into a hash table with size
 // M. The collision resolution strategy must be linear probing with step
 // size K. If an element cannot be inserted then the table size should be
 // doubled and all elements should be re-hashed (in index order) before
@@ -165,79 +169,85 @@ void problem_1_b() {
   // TODO: scanf saftety checks
   int n, m, k, i, j;
   
-  hash_string_t* hash_table;
+  h_string_t* hash_table;
 
-  hash_string_t *string = malloc(sizeof(*string));
+  h_string_t *h_string = malloc(sizeof(*h_string));
 
-  initialiseHashString(string);
+  initialise_h_string(h_string);
   
 
 
   scanf("%d %d %d\n", &n, &m, &k);
-  hash_table = malloc(sizeof(hash_string_t)*m);
+  hash_table = malloc(sizeof(h_string_t)*m);
   int* indexes = malloc(sizeof(int)*n);
 
   for(i = 0; i < m ; i++ )
   {
 
-    hash_table[i].size = string->size;
-    for(j = 0; j < hash_table[i].size; j++)
-    {
-      hash_table[i].stringArr[j] = string->stringArr[j];
-    }
-    hash_table[i].sum = string->sum;
+    copy_h_string(&hash_table[i], h_string);
 
   }
 
 
   for(i = 0; i < n; i++)
   {
-    calculateHash(string, m);
-    indexes[i] = string->sum;
+    calculate_hash(h_string, m);
+    indexes[i] = h_string->sum;
 
-    if(hash_table[string->sum].size == -1)
+    if(hash_table[h_string->sum].size == -1)
     {
-      hash_table[string->sum].size = string->size;
-      hash_table[string->sum].stringArr = malloc(sizeof(char)*string->size);
-      for(j = 0; j < string->size; j++)
+      hash_table[h_string->sum].size = h_string->size;
+      hash_table[h_string->sum].string_arr = malloc(sizeof(char)*h_string->size);
+      for(j = 0; j < h_string->size; j++)
       {
         
-        hash_table[string->sum].stringArr[j] = string->stringArr[j];
+        hash_table[h_string->sum].string_arr[j] = h_string->string_arr[j];
       }
-      hash_table[string->sum].sum = string->sum;
+      hash_table[h_string->sum].sum = h_string->sum;
     }
       
 
   }
-  
-  //pscp *.c *.h tests/*.txt Makefile emarozzi@dimefox.eng.unimelb.edu.au:COMP20007/A2/
   
 
   
   for(i = 0; i < n; i++)
   {
     print_string(hash_table[indexes[i]]);
-    free(hash_table[indexes[i]].stringArr);
+    free(hash_table[indexes[i]].string_arr);
   }
 
 
-  free(string->stringArr);
+  free(h_string->string_arr);
   free(hash_table);
-  free(string);
+  free(h_string);
   free(indexes);
 }
 
-void print_string(hash_string_t string)
+void print_string(h_string_t h_string)
 {
   int i;
 
-  for(i = 0 ; i < string.size ; i++)
+  for(i = 0 ; i < h_string.size ; i++)
   {
-    printf("%c", string.stringArr[i]);
+    printf("%c", h_string.string_arr[i]);
   }
 
   printf("\n");
 
 
+}
+
+void copy_h_string(h_string_t* h_string, h_string_t* h_string_old)
+{
+  int j;
+  h_string->size = h_string_old->size;
+
+  for(j = 0; j < h_string_old->size; j++)
+  {
+    h_string->string_arr[j] = h_string_old->string_arr[j];
+  }
+  h_string->sum = h_string_old->sum;
+  
 }
 

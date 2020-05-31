@@ -12,11 +12,11 @@
 
 typedef struct
 {
-    char* stringArr;
+    char* string_arr;
     int size;
     int sum;
 
-} hash_string_t;
+} h_string_t;
 
 
 
@@ -28,13 +28,14 @@ typedef struct
 //   ...
 //   str_N
 // And outputs (to stdout) the hash values of the N strings 1 per line.
+
+
 void problem_1_a();
-int isLower(char c);
-int isUpper(char c);
-int characterMapping(char c);
-void decToBinary(int n);
-void calculateHash(hash_string_t* string, int m);
-void initialiseHashString();
+int is_lower(char c);
+int is_upper(char c);
+int character_mapping(char c);
+void calculate_hash(h_string_t* h_string, int m);
+void initialise_h_string();
 
 // Implements a solution to Problem 1 (b), which reads in from stdin:
 //   N M K
@@ -59,7 +60,8 @@ void initialiseHashString();
 //   (M-2): str_q
 //   (M-1):
 void problem_1_b();
-void print_string(hash_string_t string);
+void print_string(h_string_t h_string);
+void copy_h_string(h_string_t *h_string, h_string_t *h_string_old);
 
 
 
