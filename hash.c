@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 
-
+//TODO: Header
 // Implements a solution to Problem 1 (a), which reads in from stdin:
 //   N M
 //   str_1
@@ -23,68 +23,79 @@
 // And outputs (to stdout) the hash values of the N strings 1 per line.
 void problem_1_a() {
   // TODO: Implement Me!
-	int n, m, i, j = 0, k, sum = 0;
-  char c;
-  char* line = malloc(sizeof(char));
+  hash_string_t* string = malloc(sizeof(*string));
+  int n, m, i;
+  initialiseHashString(string);
   scanf("%d %d\n", &n, &m);
-  printf("%d %d\n", n, m);
   // For each word
+  
   for(i = 0; i < n ; i++)
   {
-    
-    // For each char in each word
-    while((c = getchar()))
-    {
-      if(c == '\n' || c == ' ')
-      {
-        break;
-      }
-      int val = characterMapping(c);
-      printf("%c: ", c);
-      printf("%d\n", val);
-      line = realloc(line, sizeof(char)*(j+1));
-      line[j] = c;
-      j++;
-    }
-
-    for(k = 0; k < j ; k++)
-    {
-      sum = sum + (characterMapping(line[k])*(int)pow(pow(2,6),j-1-k))%m;
-    }
-
-    printf("sum is %d\n", sum);
-
-    sum = 0;
-    j = 0;
-
+    calculateHash(string, m);
+    printf("%d\n", string->sum);
   }
+  
+
+  free(string->stringArr);
+  free(string);
 
 
 }
 
-void decToBinary(int n) 
-{ 
-  // array to store binary number 
-  int binaryNum[32]; 
+void initialiseHashString(hash_string_t* string)
+{
+  
+  string->size = -1;
+  string->stringArr = malloc(sizeof(string -> stringArr)*0);
+  string->sum = -1;
 
-  // counter for binary array 
-  int i = 0; 
-  while (n > 0) { 
+}
 
-    // storing remainder in binary array 
-    binaryNum[i] = n % 2; 
-    n = n / 2; 
-    i++; 
-  } 
+void getString(hash_string_t* string)
+{
+  char c;
+  int j = 0;
 
-  // printing binary array in reverse order 
-  for (int j = i - 1; j >= 0; j--)
+  // For each char in each word
+  while((c = getchar()))
   {
-    printf("%d", binaryNum[j]);
-  }
-  printf("\n");
+    if(c == '\n' || c == ' ')
+    {
+      break;
+    }
+    string->stringArr = realloc(string->stringArr, sizeof(char*)*(j+1));
+    string->stringArr[j] = c;
+    j++;
 
-} 
+  }
+
+  string->size = j;
+
+
+}
+
+
+// Returns array of hash and string length;
+void calculateHash(hash_string_t *string, int m)
+{
+  int k, sum = 0;
+
+  getString(string);
+
+  sum = characterMapping(string -> stringArr[0]);
+
+
+  for(k = 1; k < string->size; k++)
+  {
+    sum = ((sum*64%m)+characterMapping(string -> stringArr[k])%m );
+  }
+  sum = sum%m;
+
+
+  string->sum = sum;
+
+}
+
 
 int characterMapping(char c)
 {
@@ -151,4 +162,82 @@ int isUpper(char c)
 //   (M-1):
 void problem_1_b() {
   // TODO: Implement Me!
+  // TODO: scanf saftety checks
+  int n, m, k, i, j;
+  
+  hash_string_t* hash_table;
+
+  hash_string_t *string = malloc(sizeof(*string));
+
+  initialiseHashString(string);
+  
+
+
+  scanf("%d %d %d\n", &n, &m, &k);
+  hash_table = malloc(sizeof(hash_string_t)*m);
+  int* indexes = malloc(sizeof(int)*n);
+
+  for(i = 0; i < m ; i++ )
+  {
+
+    hash_table[i].size = string->size;
+    for(j = 0; j < hash_table[i].size; j++)
+    {
+      hash_table[i].stringArr[j] = string->stringArr[j];
+    }
+    hash_table[i].sum = string->sum;
+
+  }
+
+
+  for(i = 0; i < n; i++)
+  {
+    calculateHash(string, m);
+    indexes[i] = string->sum;
+
+    if(hash_table[string->sum].size == -1)
+    {
+      hash_table[string->sum].size = string->size;
+      hash_table[string->sum].stringArr = malloc(sizeof(char)*string->size);
+      for(j = 0; j < string->size; j++)
+      {
+        
+        hash_table[string->sum].stringArr[j] = string->stringArr[j];
+      }
+      hash_table[string->sum].sum = string->sum;
+    }
+      
+
+  }
+  
+  //pscp *.c *.h tests/*.txt Makefile emarozzi@dimefox.eng.unimelb.edu.au:COMP20007/A2/
+  
+
+  
+  for(i = 0; i < n; i++)
+  {
+    print_string(hash_table[indexes[i]]);
+    free(hash_table[indexes[i]].stringArr);
+  }
+
+
+  free(string->stringArr);
+  free(hash_table);
+  free(string);
+  free(indexes);
 }
+
+void print_string(hash_string_t string)
+{
+  int i;
+
+  for(i = 0 ; i < string.size ; i++)
+  {
+    printf("%c", string.stringArr[i]);
+  }
+
+  printf("\n");
+
+
+}
+

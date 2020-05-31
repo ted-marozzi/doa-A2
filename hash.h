@@ -10,6 +10,16 @@
 #define HASH_H
 
 
+typedef struct
+{
+    char* stringArr;
+    int size;
+    int sum;
+
+} hash_string_t;
+
+
+
 
 // Implements a solution to Problem 1 (a), which reads in from stdin:
 //   N M
@@ -22,7 +32,9 @@ void problem_1_a();
 int isLower(char c);
 int isUpper(char c);
 int characterMapping(char c);
-void decToBinary(int n) ;
+void decToBinary(int n);
+void calculateHash(hash_string_t* string, int m);
+void initialiseHashString();
 
 // Implements a solution to Problem 1 (b), which reads in from stdin:
 //   N M K
@@ -47,5 +59,8 @@ void decToBinary(int n) ;
 //   (M-2): str_q
 //   (M-1):
 void problem_1_b();
+void print_string(hash_string_t string);
+
+
 
 #endif

@@ -11,9 +11,9 @@
             "request": "launch",
             "program": "${workspaceFolder}/a2.exe",
             "args": [
-                "p1a",
+                "p1b",
                 "<",
-                "tests/p1a-in-1.txt"
+                "tests/p1b-in-1.txt"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

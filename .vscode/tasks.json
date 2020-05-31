@@ -14,9 +14,23 @@
             "label": "run",
             "command": "a2.exe",
             "args": [
-                "p1a",
+                "p1b",
                 "<",
-                "tests/p1a-in-2.txt"
+                "tests/p1b-in-1.txt"
+
+            ],
+            "type": "shell",
+            "problemMatcher": [],
+            "dependsOn": ["make"]
+        },
+        {
+            
+            "group": "build",
+            "label": "clean",
+            "command": "del",
+            "args": [
+                "a2.exe",
+                "*.o",
 
             ],
             "type": "shell",
