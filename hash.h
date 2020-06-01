@@ -35,7 +35,7 @@ int is_lower(char c);
 int is_upper(char c);
 int character_mapping(char c);
 void calculate_hash(h_string_t* h_string, int m);
-void initialise_h_string();
+void init_h_string();
 
 // Implements a solution to Problem 1 (b), which reads in from stdin:
 //   N M K
@@ -62,7 +62,12 @@ void initialise_h_string();
 void problem_1_b();
 void print_string(h_string_t h_string);
 void copy_h_string(h_string_t *h_string, h_string_t *h_string_old);
-
-
+void get_string(h_string_t* h_string);
+h_string_t* rehash(h_string_t* hash_table, int i, int* m, int k);
+h_string_t* h_insert(h_string_t* hash_table, h_string_t* h_string, int i, int *m, int k);
+void print_hash_table(h_string_t* hash_table, int m);
+void init_h_table(h_string_t* h_table, int size);
+void free_h_table(h_string_t* h_table, int size);
+void free_h_string(h_string_t* h_string);
 
 #endif

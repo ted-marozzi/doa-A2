@@ -20,6 +20,7 @@
 // the trie, on a single line.
 void problem_2_a() {
   // TODO: Implement Me!
+
 }
 
 // Using the trie constructed in Part (a) this program should output all

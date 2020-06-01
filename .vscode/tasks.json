@@ -16,7 +16,7 @@
             "args": [
                 "p1b",
                 "<",
-                "tests/p1b-in-1.txt"
+                "tests/p1b-in-3.txt"
 
             ],
             "type": "shell",
@@ -29,13 +29,12 @@
             "label": "clean",
             "command": "del",
             "args": [
-                "a2.exe",
                 "*.o",
 
             ],
             "type": "shell",
             "problemMatcher": [],
-            "dependsOn": ["make"]
+        
         }
 
     ]
