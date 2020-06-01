@@ -7,6 +7,7 @@
  */
 
 #include "text_analysis.h"
+#include <stdlib.h>
 
 // Build a character level trie for a given set of words.
 //
@@ -19,7 +20,19 @@
 // Your program must output the pre-order traversal of the characters in
 // the trie, on a single line.
 void problem_2_a() {
-  // TODO: Implement Me!
+  // TODO: remove magic numbers
+  
+  int n;
+  int numScanned = scanf("%d\n", &n);
+  // checks that the number of strings is read correctly
+  if(numScanned != 1)
+  {
+    printf("Invalid input\n");
+    exit(EXIT_FAILURE);
+  }
+
+  
+
 
 }
 
