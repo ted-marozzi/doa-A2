@@ -9,16 +9,14 @@
 #ifndef HASH_H
 #define HASH_H
 
-
+// hash string structure
 typedef struct
 {
     char* string_arr;
     int size;
-    int sum;
+    int key;
 
 } h_string_t;
-
-
 
 
 // Implements a solution to Problem 1 (a), which reads in from stdin:
@@ -29,13 +27,15 @@ typedef struct
 //   str_N
 // And outputs (to stdout) the hash values of the N strings 1 per line.
 
-
+// Hash string functions
 void problem_1_a();
 int is_lower(char c);
 int is_upper(char c);
 int character_mapping(char c);
 void calculate_hash(h_string_t* h_string, int m);
 void init_h_string();
+void free_h_string(h_string_t* h_string);
+
 
 // Implements a solution to Problem 1 (b), which reads in from stdin:
 //   N M K
@@ -59,6 +59,8 @@ void init_h_string();
 //   ...
 //   (M-2): str_q
 //   (M-1):
+
+// More hash string functions
 void problem_1_b();
 void print_string(h_string_t h_string);
 void copy_h_string(h_string_t *h_string, h_string_t *h_string_old);
@@ -69,5 +71,6 @@ void print_hash_table(h_string_t* hash_table, int m);
 void init_h_table(h_string_t* h_table, int size);
 void free_h_table(h_string_t* h_table, int size);
 void free_h_string(h_string_t* h_string);
+void assertPtr(void* ptr);
 
 #endif
