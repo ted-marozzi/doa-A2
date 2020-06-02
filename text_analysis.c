@@ -11,6 +11,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_STRING_SIZE 100
+#define ROOT_NODE_CHAR '^'
+#define FIRST_LETTER 0
+#define EOS '\0'
+#define LETTER_OFFSET 'a'
 // Build a character level trie for a given set of words.
 //
 // The input to your program is an integer N followed by N lines containing
@@ -33,14 +38,16 @@ void problem_2_a() {
     exit(EXIT_FAILURE);
   }
 
-  trie_node_t* root = create_trie_node('a');
+  trie_node_t* root = create_trie_node(ROOT_NODE_CHAR);
+
+  // Not dynamically associating memory as only one temp variable so its not
+  // necassary to save memory in this case.
   char string[100];
 
 
   for(int i = 0; i < n ; i++)
   {
-    fgets(string, 100, stdin);
-    printf("%s\n", string);
+    fgets(string, MAX_STRING_SIZE, stdin);
     insert_string(root, string);
   }
 
@@ -49,79 +56,30 @@ void problem_2_a() {
 
 }
 
-char* get_string()
+void insert_string(trie_node_t* node, char* string)
 {
-  char c;
-  char string[] = "";
-  int len = 0;
 
-  while ((c = getchar()))
+  if(string[FIRST_LETTER] == EOS || string[FIRST_LETTER] == '\n')
   {
-    // String ended
-    if (c == '\n' || c == ' ' || c == EOF)
-    {
-      //insert_char('\0', &string, &len);
-      break;
-    }
-
-    strncat(string, &c, 1);
-    //insert_char(c, &string, &len);
-
-    // len++;
-
-    // if(string == NULL)
-    // {
-    //   string = malloc(sizeof(char)*len);
-    // }
-    // else
-    // {
-    //   string = realloc(string, sizeof(char)*len);
-    // }
-    
-    // assertPtr(string);
-
-    // string[len-1] = c;
+    return;
+  } 
+  else if (node->character[string[FIRST_LETTER]-LETTER_OFFSET] == NULL)
+  {
+    node->character[string[FIRST_LETTER] - LETTER_OFFSET] = create_trie_node(string[0]);
   }
-
-
-  return string;
-}
-
-// void insert_char(char c, char *string, int* len)
-// {
-//   (*len)++;
-
-//   if(string == NULL)
-//   {
-//     string = malloc(sizeof(char)*(*len));
-//     string[(*len)-1] = NULL;
-//   }
-//   else
-//   {
-//     string = realloc(string, sizeof(char)*(*len));
-//     string[(*len)-1] = NULL;
-//   }
   
-//   assertPtr(string);
+  node->character[string[FIRST_LETTER] - LETTER_OFFSET]->freq++;
+  
+  
 
-//   string[(*len)-1] = c;
-
-// }
-
-// void assertPtr(void* ptr)
-// {
-//   if(ptr == NULL)
-//   {
-//     printf("Pointer assertion failed\n");
-//     exit(EXIT_FAILURE);
-//   }
-// }
-
-void insert_string(trie_node_t* root, char* string)
-{
+  // first recur on left subtree 
+  insert_string(&(node->character[string[FIRST_LETTER] - LETTER_OFFSET]), memmove(string, string+1, strlen(string))); 
+  return;
+} 
 
 
-}
+
+
 
 
 
@@ -134,7 +92,7 @@ trie_node_t* create_trie_node(char c)
     trie_node->character[i] = NULL; 
   }
 
-  trie_node->freq = 1;
+  trie_node->freq = 0;
 
   return trie_node;
   
