@@ -13,9 +13,11 @@
 
 #define MAX_STRING_SIZE 100
 #define ROOT_NODE_CHAR '^'
+#define LEAF_NODE_CHAR '$'
 #define FIRST_LETTER 0
-#define EOS '\0'
+#define EOS_INDEX 0
 #define LETTER_OFFSET 'a'
+#define CHAR_TO_INDEX(c) ((int)c - (int)'a' + 1)
 // Build a character level trie for a given set of words.
 //
 // The input to your program is an integer N followed by N lines containing
@@ -26,79 +28,119 @@
 //
 // Your program must output the pre-order traversal of the characters in
 // the trie, on a single line.
-void problem_2_a() {
+void problem_2_a()
+{
   // TODO: remove magic numbers
-  
+  // FILL in header
+
   int n;
   int numScanned = scanf("%d\n", &n);
   // checks that the number of strings is read correctly
-  if(numScanned != 1)
+  if (numScanned != 1)
   {
     printf("Invalid input\n");
     exit(EXIT_FAILURE);
   }
 
-  trie_node_t* root = create_trie_node(ROOT_NODE_CHAR);
+  trie_node_t *root = create_trie_node(ROOT_NODE_CHAR);
 
   // Not dynamically associating memory as only one temp variable so its not
   // necassary to save memory in this case.
   char string[100];
 
-
-  for(int i = 0; i < n ; i++)
+  for (int i = 0; i < n; i++)
   {
     fgets(string, MAX_STRING_SIZE, stdin);
+    string[strlen(string) - 1] = LEAF_NODE_CHAR;
     insert_string(root, string);
   }
 
-  free(root);
+
+  pre_order_trieversal(root);
 
 
+  free_trie(root);
 }
 
-void insert_string(trie_node_t* node, char* string)
+void pre_order_trieversal(trie_node_t *root)
 {
 
-  if(string[FIRST_LETTER] == EOS || string[FIRST_LETTER] == '\n')
+  if (root == NULL)
   {
     return;
-  } 
-  else if (node->character[string[FIRST_LETTER]-LETTER_OFFSET] == NULL)
-  {
-    node->character[string[FIRST_LETTER] - LETTER_OFFSET] = create_trie_node(string[0]);
   }
-  
-  node->character[string[FIRST_LETTER] - LETTER_OFFSET]->freq++;
-  
-  
 
-  // first recur on left subtree 
-  insert_string(&(node->character[string[FIRST_LETTER] - LETTER_OFFSET]), memmove(string, string+1, strlen(string))); 
-  return;
-} 
+  /* first print data of node */
+  printf("%c\n", root->c);
 
-
-
-
-
-
-
-trie_node_t* create_trie_node(char c)
-{
-  trie_node_t* trie_node = (trie_node_t*)malloc(sizeof(trie_node_t));
-  trie_node->c = c;
-  for(int i =0; i<NUM_CHARS; i++)
+  /* then recur on left sutree */
+  for (int i = 0; i < NUM_CHARS; i++)
   {
-    trie_node->character[i] = NULL; 
+    if (root->character[i] != NULL)
+    {
+      pre_order_trieversal(root->character[i]);
+    }
+  }
+}
+
+void free_trie(trie_node_t *root)
+{
+  int i = 0;
+
+  if (!root)
+  {
+
+    return;
+  }
+  for (i = 0; i < NUM_CHARS; i++)
+  {
+    free_trie(root->character[i]);
+  }
+
+  free(root);
+}
+
+// Inserts a string into the char trie
+void insert_string(trie_node_t *root, char *string)
+{
+
+  trie_node_t *node_crawler = root;
+  int index;
+  for (int i = 0; i < strlen(string); i++)
+  {
+    node_crawler->freq++;
+    if (string[i] == LEAF_NODE_CHAR)
+    {
+      index = EOS_INDEX;
+    }
+    else
+    {
+      index = CHAR_TO_INDEX(string[i]);
+    }
+
+    if (!node_crawler->character[index])
+    {
+      node_crawler->character[index] = create_trie_node(string[i]);
+    }
+
+    node_crawler = node_crawler->character[index];
+  }
+  node_crawler->freq++;
+}
+
+trie_node_t *create_trie_node(char c)
+{
+  trie_node_t *trie_node = (trie_node_t *)malloc(sizeof(trie_node_t));
+  trie_node->c = c;
+  for (int i = 0; i < NUM_CHARS; i++)
+  {
+    trie_node->character[i] = NULL;
   }
 
   trie_node->freq = 0;
 
   return trie_node;
-  
 }
-
-
 
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
@@ -113,8 +155,36 @@ trie_node_t* create_trie_node(char c)
 //   ba 12
 //   ...
 //   ye 1
-void problem_2_b() {
-  // TODO: Implement Me!
+void problem_2_b()
+{
+
+  int n;
+  int numScanned = scanf("%d %d\n", &n);
+  // checks that the number of strings is read correctly
+  if (numScanned != 2)
+  {
+    printf("Invalid input\n");
+    exit(EXIT_FAILURE);
+  }
+
+  trie_node_t *root = create_trie_node(ROOT_NODE_CHAR);
+
+  // Not dynamically associating memory as only one temp variable so its not
+  // necassary to save memory in this case.
+  char string[100];
+
+  for (int i = 0; i < n; i++)
+  {
+    fgets(string, MAX_STRING_SIZE, stdin);
+    string[strlen(string) - 1] = LEAF_NODE_CHAR;
+    insert_string(root, string);
+  }
+
+
+  pre_order_trieversal(root);
+
+
+  free_trie(root);
 }
 
 // Again using the trie data structure you implemented for Part (a) you will
@@ -144,6 +214,7 @@ void problem_2_b() {
 //
 // If there are two strings with the same probability ties should be broken
 // alphabetically (with "a" coming before "aa").
-void problem_2_c() {
+void problem_2_c()
+{
   // TODO: Implement Me!
 }

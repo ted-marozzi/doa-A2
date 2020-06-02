@@ -37,6 +37,8 @@ void assertPtr(void* ptr);
 char* get_string();
 void insert_string(trie_node_t* root, char* string);
 void insert_char(char c, char *string, int* len);
+void free_trie(trie_node_t *root);
+void pre_order_trieversal(trie_node_t* root);
 
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies

@@ -70,7 +70,7 @@ void get_h_string(h_string_t *h_string)
   int j = 0;
 
   // For each char in each word
-  while (c = getchar())
+  while ((c = getchar()))
   {
     // String ended
     if (c == '\n' || c == ' ')
