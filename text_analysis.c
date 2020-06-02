@@ -9,6 +9,7 @@
 #include "text_analysis.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // Build a character level trie for a given set of words.
 //
@@ -32,15 +33,97 @@ void problem_2_a() {
     exit(EXIT_FAILURE);
   }
 
-  
   trie_node_t* root = create_trie_node('a');
+  char string[100];
 
-  printf("ok");
+
+  for(int i = 0; i < n ; i++)
+  {
+    fgets(string, 100, stdin);
+    printf("%s\n", string);
+    insert_string(root, string);
+  }
 
   free(root);
 
 
 }
+
+char* get_string()
+{
+  char c;
+  char string[] = "";
+  int len = 0;
+
+  while ((c = getchar()))
+  {
+    // String ended
+    if (c == '\n' || c == ' ' || c == EOF)
+    {
+      //insert_char('\0', &string, &len);
+      break;
+    }
+
+    strncat(string, &c, 1);
+    //insert_char(c, &string, &len);
+
+    // len++;
+
+    // if(string == NULL)
+    // {
+    //   string = malloc(sizeof(char)*len);
+    // }
+    // else
+    // {
+    //   string = realloc(string, sizeof(char)*len);
+    // }
+    
+    // assertPtr(string);
+
+    // string[len-1] = c;
+  }
+
+
+  return string;
+}
+
+// void insert_char(char c, char *string, int* len)
+// {
+//   (*len)++;
+
+//   if(string == NULL)
+//   {
+//     string = malloc(sizeof(char)*(*len));
+//     string[(*len)-1] = NULL;
+//   }
+//   else
+//   {
+//     string = realloc(string, sizeof(char)*(*len));
+//     string[(*len)-1] = NULL;
+//   }
+  
+//   assertPtr(string);
+
+//   string[(*len)-1] = c;
+
+// }
+
+// void assertPtr(void* ptr)
+// {
+//   if(ptr == NULL)
+//   {
+//     printf("Pointer assertion failed\n");
+//     exit(EXIT_FAILURE);
+//   }
+// }
+
+void insert_string(trie_node_t* root, char* string)
+{
+
+
+}
+
+
 
 trie_node_t* create_trie_node(char c)
 {

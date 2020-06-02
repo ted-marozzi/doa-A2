@@ -64,7 +64,7 @@ void free_h_string(h_string_t* h_string);
 void problem_1_b();
 void print_string(h_string_t h_string);
 void copy_h_string(h_string_t *h_string, h_string_t *h_string_old);
-void get_string(h_string_t* h_string);
+void get_h_string(h_string_t* h_string);
 h_string_t* rehash(h_string_t* hash_table, int i, int* m, int k);
 h_string_t* h_insert(h_string_t* hash_table, h_string_t* h_string, int i, int *m, int k);
 void print_hash_table(h_string_t* hash_table, int m);

@@ -34,7 +34,7 @@ void problem_1_a()
   for (i = 0; i < n; i++)
   {
     // Get the string from std in
-    get_string(h_string);
+    get_h_string(h_string);
     // Calculate its hash value
     calculate_hash(h_string, m);
     // Print the result
@@ -64,13 +64,13 @@ void init_h_string(h_string_t *h_string)
 }
 
 // gets a string from stdio and puts it in a h_string
-void get_string(h_string_t *h_string)
+void get_h_string(h_string_t *h_string)
 {
   char c;
   int j = 0;
 
   // For each char in each word
-  while ((c = getchar()))
+  while (c = getchar())
   {
     // String ended
     if (c == '\n' || c == ' ')
@@ -214,7 +214,7 @@ void problem_1_b()
   // For each string simply get it then insert it
   for (i = 0; i < n; i++)
   {
-    get_string(h_string);
+    get_h_string(h_string);
 
     hash_table = h_insert(hash_table, h_string, i, &m, k);
   }

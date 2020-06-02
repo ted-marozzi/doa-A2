@@ -33,6 +33,10 @@ typedef struct Trie_node trie_node_t;
 void problem_2_a();
 
 trie_node_t* create_trie_node(char c);
+void assertPtr(void* ptr);
+char* get_string();
+void insert_string(trie_node_t* root, char* string);
+void insert_char(char c, char *string, int* len);
 
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
