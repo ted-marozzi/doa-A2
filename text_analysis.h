@@ -8,6 +8,17 @@
 
 #ifndef TEXT_ANALYSIS_H
 #define TEXT_ANALYSIS_H
+#define NUM_CHARS 27
+
+struct Trie_node
+{
+    struct Trie_node* character[NUM_CHARS];
+    char c;
+    int freq;
+
+};
+
+typedef struct Trie_node trie_node_t;
 
 // Build a character level trie for a given set of words.
 //
@@ -20,6 +31,8 @@
 // Your program must output the pre-order traversal of the characters in
 // the trie, on a single line.
 void problem_2_a();
+
+trie_node_t* create_trie_node(char c);
 
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies

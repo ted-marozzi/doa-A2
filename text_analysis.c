@@ -8,6 +8,7 @@
 
 #include "text_analysis.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 // Build a character level trie for a given set of words.
 //
@@ -32,9 +33,31 @@ void problem_2_a() {
   }
 
   
+  trie_node_t* root = create_trie_node('a');
+
+  printf("ok");
+
+  free(root);
 
 
 }
+
+trie_node_t* create_trie_node(char c)
+{
+  trie_node_t* trie_node = (trie_node_t*)malloc(sizeof(trie_node_t));
+  trie_node->c = c;
+  for(int i =0; i<NUM_CHARS; i++)
+  {
+    trie_node->character[i] = NULL; 
+  }
+
+  trie_node->freq = 1;
+
+  return trie_node;
+  
+}
+
+
 
 // Using the trie constructed in Part (a) this program should output all
 // prefixes of length K, in alphabetic order along with their frequencies
