@@ -11,9 +11,9 @@
             "request": "launch",
             "program": "${workspaceFolder}/a2.exe",
             "args": [
-                "p2a",
+                "p2b",
                 "<",
-                "tests/p2a-in-1.txt"
+                "tests/p2b-in-2.txt"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

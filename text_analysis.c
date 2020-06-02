@@ -62,6 +62,7 @@ void problem_2_a()
   free_trie(root);
 }
 
+
 void pre_order_trieversal(trie_node_t *root)
 {
 
@@ -70,10 +71,9 @@ void pre_order_trieversal(trie_node_t *root)
     return;
   }
 
-  /* first print data of node */
   printf("%c\n", root->c);
 
-  /* then recur on left sutree */
+  
   for (int i = 0; i < NUM_CHARS; i++)
   {
     if (root->character[i] != NULL)
@@ -158,8 +158,8 @@ trie_node_t *create_trie_node(char c)
 void problem_2_b()
 {
 
-  int n;
-  int numScanned = scanf("%d %d\n", &n);
+  int n, strLen;
+  int numScanned = scanf("%d %d\n", &n, &strLen);
   // checks that the number of strings is read correctly
   if (numScanned != 2)
   {
@@ -181,10 +181,56 @@ void problem_2_b()
   }
 
 
-  pre_order_trieversal(root);
-
+  get_prefix(root, strLen);
 
   free_trie(root);
+}
+
+void get_prefix(trie_node_t *root, int str_len)
+{
+  int level = 0;
+  char* string = malloc(sizeof(char)*str_len);
+  get_prefix_util(root, str_len, &level, string);
+
+  free(string);
+
+}
+
+void get_prefix_util(trie_node_t *root, int str_len, int* level, char* string)
+{
+
+  if (root == NULL)
+  {
+    return;
+  }
+
+  if((*level) <= str_len && (*level) > 0  && root->c != LEAF_NODE_CHAR)
+  {
+    string[(*level)-1] = root->c;
+  }
+  
+ 
+  if((*level) == str_len && (root->c) != LEAF_NODE_CHAR)
+  {
+    for(int i = 0; i < str_len ; i++)
+    {
+      printf("%c", string[i]);
+    }
+    printf(" %d\n", root->freq);
+  }
+  
+
+  
+  for (int i = 0; i < NUM_CHARS; i++)
+  {
+    if (root->character[i] != NULL)
+    {
+      (*level)++;
+      get_prefix_util(root->character[i], str_len, level, string);
+    }
+  }
+
+  (*level)--;
 }
 
 // Again using the trie data structure you implemented for Part (a) you will

@@ -5,14 +5,14 @@
  * template by Tobias Edwards <tobias.edwards@unimelb.edu.au>
  * implementation by <Insert Name Here>
  */
-
+//TODO: get rid of this command
 //pscp *.c *.h Makefile emarozzi@dimefox.eng.unimelb.edu.au:COMP20007/A2/
 
 #include "hash.h"
+#include <stdlib>
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
-#include <stdlib.h>
 #include <stddef.h>
 
 // Implements a solution to Problem 1 (a), which reads in from stdin:

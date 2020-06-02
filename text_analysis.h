@@ -55,6 +55,9 @@ void pre_order_trieversal(trie_node_t* root);
 //   ye 1
 void problem_2_b();
 
+void get_prefix_util(trie_node_t *root, int strLen, int* level, char* string);
+void get_prefix(trie_node_t *root, int strLen);
+
 // Again using the trie data structure you implemented for Part (a) you will
 // provide a list (up to 5) of the most probable word completions for a given
 // word stub.
