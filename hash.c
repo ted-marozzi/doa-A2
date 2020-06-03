@@ -9,7 +9,7 @@
 //pscp *.c *.h Makefile emarozzi@dimefox.eng.unimelb.edu.au:COMP20007/A2/
 
 #include "hash.h"
-#include <stdlib>
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>

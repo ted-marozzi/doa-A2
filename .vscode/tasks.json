@@ -14,9 +14,9 @@
             "label": "run",
             "command": "a2.exe",
             "args": [
-                "p2b",
+                "p2c",
                 "<",
-                "tests/p2b-in-3.txt"
+                "tests/p2c-in-1.txt"
 
             ],
             "type": "shell",

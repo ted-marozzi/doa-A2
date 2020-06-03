@@ -9,6 +9,7 @@
 #ifndef TEXT_ANALYSIS_H
 #define TEXT_ANALYSIS_H
 #define NUM_CHARS 27
+#include <stdbool.h>
 
 struct Trie_node
 {
@@ -18,7 +19,14 @@ struct Trie_node
 
 };
 
+struct Str_freq
+{
+    char* string;
+    int freq;
+};
+
 typedef struct Trie_node trie_node_t;
+typedef struct Str_freq str_freq_t;
 
 // Build a character level trie for a given set of words.
 //
@@ -34,7 +42,6 @@ void problem_2_a();
 
 trie_node_t* create_trie_node(char c);
 void assertPtr(void* ptr);
-char* get_string();
 void insert_string(trie_node_t* root, char* string);
 void insert_char(char c, char *string, int* len);
 void free_trie(trie_node_t *root);
@@ -86,5 +93,8 @@ void get_prefix(trie_node_t *root, int strLen);
 // If there are two strings with the same probability ties should be broken
 // alphabetically (with "a" coming before "aa").
 void problem_2_c();
+bool append_char(char** string, char c, int *j);
+char* get_string();
+trie_node_t* traverse_to(trie_node_t* root, char* stub);
 
 #endif
