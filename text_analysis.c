@@ -289,7 +289,7 @@ void problem_2_c()
   char* string = NULL;
   char * stub = NULL;
   trie_node_t* stub_node = NULL;
-  str_freq_t* str_freq_arr = malloc(sizeof(str_freq_t));
+  
 
   // checks that the number of strings is read correctly
   if (numScanned != NUM_PARAMS_A)
@@ -307,28 +307,82 @@ void problem_2_c()
        
   }
 
-  stub_node = traverse_to(root, str_freq_arr);
+  
 
-  get_freq(stub_node, stub);
+  stub_node = traverse_to(root, stub);
+  int level = 0;
+  //TODO chage to util
+  str_freq_t* str_freq_list = create_str_freq_node(0, stub);
+  str_freq_t* str_freq_crawler = str_freq_list;
+  char* tmp_string = malloc(0);
+  int num_strings = 0;
+  get_freq(stub_node, str_freq_crawler, tmp_string, &level, &num_strings);
+  
+  int sum = 0;
+  str_freq_crawler = str_freq_list;
+  for(int i = 0; i < num_strings ;i++)
+  {
+    sum = sum + str_freq_crawler->freq;
+    str_freq_crawler= str_freq_crawler->next;
+  }
+
+  str_freq_crawler = str_freq_list;
+
+  for(int i = 0; i < num_strings ;i++)
+  {
+
+    printf("%.2f %s\n", (float)str_freq_crawler->freq/sum, str_freq_crawler->string);
+
+    str_freq_crawler= str_freq_crawler->next;
+  }
 
 
 
+
+
+  free(tmp_string);
   free(string);
   free(stub);
   free_trie(root);
 
 }
 
-void get_freq(trie_node_t *root, str_freq_t* str_freq_arr)
+void get_freq(trie_node_t *root, str_freq_t* str_freq_crawler, char* string, int* level, int* num_strings)
 {
+
   // Exit condition
   if (root == NULL)
-  {
-    // Contines searching on the current node to go down a level
+  { 
     return;
   }
   // Print the roots char as it is visited
-  printf("%c\n", root->c);
+  //printf("%c\n", root->c);
+
+  if(root->c != LEAF_NODE_CHAR)
+  {
+    
+    string = realloc(string, sizeof(char)*((*level)+2));
+    
+    string[*level] = root->c;
+    string[(*level) + 1] = EOS;
+  }
+    
+
+
+  if(root->c == LEAF_NODE_CHAR)
+  {
+    //Implement a level system to fill in the string, which is then passed into
+    // the create node, which will be added to the array, at the end the array maky
+    //be scanned and evaluated
+    //str_freq_t* str_freq_node = create_str_freq_node(root->freq)
+
+    string[*level] = EOS;
+    //str_freq_arr = realloc(str_freq_arr, (++*num_strings)*sizeof(str_freq_t));
+  
+    num_strings++;   
+
+  }
+
 
   // For each char traverse to child char in alphabetical order
   for (int i = 0; i < NUM_CHARS; i++)
@@ -336,23 +390,28 @@ void get_freq(trie_node_t *root, str_freq_t* str_freq_arr)
     // TODO: Add this effciency upgrade if it works root -> c != LEAF_NODE_CHAR
     if ( root->character[i] != NULL)
     {
-      pre_order_trieversal(root->character[i], str_freq_arr);
+      (*level)++;
+      get_freq(root->character[i], str_freq_crawler, string , level, num_strings);
     }
   }
-  // Goes up a level bc at $
-  str_freq_t* str_freq_node = create_str_freq_node(root->freq, root->c);
-  
+
+  (*level)--;
 }
 
 
 
-str_freq_t *create_str_freq_node(int freq, char* string)
+str_freq_t* create_str_freq_node(int freq, char* string)
 {
-  str_freq_t *str_freq_node = (str_freq_t *)malloc(sizeof(str_freq_t));
+  str_freq_t* str_freq_node = (str_freq_t *)malloc(sizeof(str_freq_t));
+
   str_freq_node->freq = freq;
-  str_freq_node->string = string;
+  str_freq_node->string = malloc(sizeof(char)*strlen(string));
+  strcpy(str_freq_node->string,string);
+  str_freq_node->next = NULL;
+
   return str_freq_node;
 }
+
 
 trie_node_t* traverse_to(trie_node_t* root, char* stub)
 {

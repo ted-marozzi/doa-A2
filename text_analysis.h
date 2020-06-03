@@ -23,10 +23,12 @@ struct Str_freq
 {
     char* string;
     int freq;
+    struct Str_freq* next;
 };
 
 typedef struct Trie_node trie_node_t;
 typedef struct Str_freq str_freq_t;
+
 
 // Build a character level trie for a given set of words.
 //
@@ -96,5 +98,8 @@ void problem_2_c();
 bool append_char(char** string, char c, int *j);
 char* get_string();
 trie_node_t* traverse_to(trie_node_t* root, char* stub);
+
+void get_freq(trie_node_t *root, str_freq_t* str_freq_arr, char* string, int *level, int *num_strings);
+str_freq_t *create_str_freq_node(int freq, char* string);
 
 #endif
