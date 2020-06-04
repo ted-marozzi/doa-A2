@@ -3,7 +3,7 @@
  *
  * created for COMP20007 Design of Algorithms 2020
  * template by Tobias Edwards <tobias.edwards@unimelb.edu.au>
- * implementation by <Insert Name Here>
+ * implementation by Edward Marozzi
  */
 
 #include "text_analysis.h"
@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #define MAX_STRING_SIZE 100
 #define ROOT_NODE_CHAR '^'
@@ -22,6 +23,8 @@
 #define NUM_PARAMS_A 1
 #define NUM_PARAMS_B 2
 #define EOS '\0'
+#define MAX_STRINGS 5
+
 // Build a character level trie for a given set of words.
 //
 // The input to your program is an integer N followed by N lines containing
@@ -34,8 +37,6 @@
 // the trie, on a single line.
 void problem_2_a()
 {
-  // TODO: remove magic numbers
-  // FILL in header
   int n;
   int numScanned = scanf("%d\n", &n);
   // checks that the number of strings is read correctly
@@ -45,11 +46,12 @@ void problem_2_a()
     exit(EXIT_FAILURE);
   }
 
+  // Creates a trie_node
   trie_node_t *root = create_trie_node(ROOT_NODE_CHAR);
 
   // Not dynamically associating memory as only one temp variable so its not
   // necassary to save memory in this case.
-  char string[100];
+  char string[MAX_STRING_SIZE];
 
   // For each string add it to the trie
   for (int i = 0; i < n; i++)
@@ -62,7 +64,7 @@ void problem_2_a()
   // trieverse the trie
   pre_order_trieversal(root);
 
-
+  // Clean up recursivly
   free_trie(root);
 }
 
@@ -80,11 +82,13 @@ void pre_order_trieversal(trie_node_t *root)
   // For each char traverse to child char in alphabetical order
   for (int i = 0; i < NUM_CHARS; i++)
   {
+    // If a char is not null traverse to it
     if (root->character[i] != NULL)
     {
       pre_order_trieversal(root->character[i]);
     }
   }
+  // Returns back a node
 }
 
 // Frees the trie recurisevly
@@ -97,7 +101,7 @@ void free_trie(trie_node_t *root)
   {
     return;
   }
-  // Recurisve call
+  // Recursive call
   for (i = 0; i < NUM_CHARS; i++)
   {
     free_trie(root->character[i]);
@@ -121,10 +125,12 @@ void insert_string(trie_node_t *root, char *string)
     // Assign appropriate index
     if (string[i] == LEAF_NODE_CHAR)
     {
+      // End of string
       index = EOS_INDEX;
     }
     else
     {
+      // Converts to an index
       index = CHAR_TO_INDEX(string[i]);
     }
 
@@ -136,7 +142,7 @@ void insert_string(trie_node_t *root, char *string)
     // Next node
     node_crawler = node_crawler->character[index];
   }
-  
+
   node_crawler->freq++;
 }
 
@@ -209,15 +215,14 @@ void get_prefix(trie_node_t *root, int str_len)
 {
   // Tracks which level we are on
   int level = 0;
-  char* string = malloc(sizeof(char)*str_len);
+  char *string = malloc(sizeof(char) * str_len);
   // Recursive call
   get_prefix_util(root, str_len, &level, string);
 
   free(string);
-
 }
 
-void get_prefix_util(trie_node_t *root, int str_len, int* level, char* string)
+void get_prefix_util(trie_node_t *root, int str_len, int *level, char *string)
 {
   // Exit condition
   if (root == NULL)
@@ -225,17 +230,17 @@ void get_prefix_util(trie_node_t *root, int str_len, int* level, char* string)
     return;
   }
   // If the current levelis not on the root char but less than the str_len
-  // and the current char isn't a leaf char then insert it into the array 
-  if((*level) <= str_len && (*level) > 0  && root->c != LEAF_NODE_CHAR)
+  // and the current char isn't a leaf char then insert it into the array
+  if ((*level) <= str_len && (*level) > 0 && root->c != LEAF_NODE_CHAR)
   {
-    string[(*level)-1] = root->c;
+    string[(*level) - 1] = root->c;
   }
-  
+
   // If we are at the level of str_len and the current node isnt a leaf node
   // Print out resulting string and freq
-  if((*level) == str_len && (root->c) != LEAF_NODE_CHAR)
+  if ((*level) == str_len && (root->c) != LEAF_NODE_CHAR)
   {
-    for(int i = 0; i < str_len ; i++)
+    for (int i = 0; i < str_len; i++)
     {
       printf("%c", string[i]);
     }
@@ -250,7 +255,7 @@ void get_prefix_util(trie_node_t *root, int str_len, int* level, char* string)
       get_prefix_util(root->character[i], str_len, level, string);
     }
   }
-  // When we get here it means that we are going back one level 
+  // When we get here it means that we are going back one level
   (*level)--;
 }
 
@@ -283,13 +288,14 @@ void get_prefix_util(trie_node_t *root, int str_len, int* level, char* string)
 // alphabetically (with "a" coming before "aa").
 void problem_2_c()
 {
-  
+
   int n;
+  int num_strings;
   int numScanned = scanf("%d\n", &n);
-  char* string = NULL;
-  char * stub = NULL;
-  trie_node_t* stub_node = NULL;
-  
+  char string[MAX_STRING_SIZE];
+  char stub[MAX_STRING_SIZE];
+  int level = 0;
+  trie_node_t *stub_node = NULL;
 
   // checks that the number of strings is read correctly
   if (numScanned != NUM_PARAMS_A)
@@ -297,129 +303,198 @@ void problem_2_c()
     printf("Invalid input\n");
     exit(EXIT_FAILURE);
   }
-
+  // Creates a trie
   trie_node_t *root = create_trie_node(ROOT_NODE_CHAR);
-  stub = get_string();
-  for( int i = 0 ; i < n; i++)
+
+  // Gets the strings
+  fgets(stub, MAX_STRING_SIZE, stdin);
+  // Puts in the leaf node char $
+  stub[strlen(stub) - 1] = LEAF_NODE_CHAR;
+
+  // For each string add it to the trie
+  for (int i = 0; i < n; i++)
   {
-    string = get_string();
+    fgets(string, MAX_STRING_SIZE, stdin);
+    string[strlen(string) - 1] = LEAF_NODE_CHAR;
     insert_string(root, string);
-       
   }
-
-  
-
+  // Gets the node of the end of the stub
   stub_node = traverse_to(root, stub);
-  int level = 0;
-  //TODO chage to util
-  str_freq_t* str_freq_list = create_str_freq_node(0, stub);
-  str_freq_t* str_freq_crawler = str_freq_list;
-  char* tmp_string = malloc(0);
-  int num_strings = 0;
-  get_freq(stub_node, str_freq_crawler, tmp_string, &level, &num_strings);
-  
-  int sum = 0;
-  str_freq_crawler = str_freq_list;
-  for(int i = 0; i < num_strings ;i++)
+  // Number of words possible from the stub
+  int sum_freq = stub_node->freq;
+
+  // Used to create a string for the get freq recursive call
+  char tmp_string[MAX_STRING_SIZE];
+  num_strings = 0;
+
+  // Inserst the EOS char '\0' in place of the $
+  stub[strlen(stub) - 2] = EOS;
+  // Array of structs containg the string and the prob
+  str_prob_t *str_prob_arr = malloc(sizeof(str_prob_t) * sum_freq);
+
+  //Initialises the array
+  for (int i = 0; i < sum_freq; i++)
   {
-    sum = sum + str_freq_crawler->freq;
-    str_freq_crawler= str_freq_crawler->next;
+    str_prob_arr[i].prob = -1;
+    strcpy(str_prob_arr[i].string, "");
   }
 
-  str_freq_crawler = str_freq_list;
+  // Recursivly fills out the str_prob_array in alphabetical order
+  get_freq(stub_node, tmp_string, &level, &num_strings, &sum_freq, stub,
+           str_prob_arr);
 
-  for(int i = 0; i < num_strings ;i++)
+  str_prob_t *str_probs = malloc(sizeof(str_prob_t) * num_strings);
+  // Trims the array down to the number of unique strings
+  for (int i = 0; i < num_strings; i++)
   {
-
-    printf("%.2f %s\n", (float)str_freq_crawler->freq/sum, str_freq_crawler->string);
-
-    str_freq_crawler= str_freq_crawler->next;
+    str_probs[i].prob = str_prob_arr[i].prob;
+    strcpy(str_probs[i].string, str_prob_arr[i].string);
   }
 
+  // Normal merge sorting function, stable thus we are now sorted by prob
+  //  and then alphabetical
+  merge_sort(str_probs, num_strings, sizeof(str_prob_t), prob_comp);
 
+  // Max of 5 elements
+  for (int i = 0; i < MAX_STRINGS; i++)
+  {
 
+    if (i == num_strings)
+    {
+      break;
+    }
+    printf("%.2lf %s\n", str_probs[i].prob, str_probs[i].string);
+  }
 
+  // Clean up
 
-  free(tmp_string);
-  free(string);
-  free(stub);
   free_trie(root);
-
+  free(str_probs);
+  free(str_prob_arr);
 }
 
-void get_freq(trie_node_t *root, str_freq_t* str_freq_crawler, char* string, int* level, int* num_strings)
+/* Compares the s data for merge sort */
+int prob_comp(const void *a, const void *b)
+{
+  str_prob_t *ra = (str_prob_t *)a;
+  str_prob_t *rb = (str_prob_t *)b;
+
+  /* With double data we can just subtract to get the right behaviour */
+  return (ra->prob < rb->prob) - (ra->prob > rb->prob);
+}
+
+/* Subroutine to merge two input arrays into an output array. */
+void merge(void *out, const void *pa, size_t na, const void *pb,
+           size_t nb, size_t elem_size, int (*cmp)(const void *, const void *))
+{
+  while (na != 0 || nb != 0)
+  {
+    if (na == 0 || (nb != 0 && cmp(pa, pb) > 0))
+    {
+      memcpy(out, pb, elem_size);
+      pb = (const char *)pb + elem_size;
+      nb--;
+    }
+    else
+    {
+      memcpy(out, pa, elem_size);
+      pa = (const char *)pa + elem_size;
+      na--;
+    }
+    out = (char *)out + elem_size;
+  }
+}
+
+/* Merge sort an array. Function modified from*/
+void merge_sort(void *base, size_t n_memb, size_t elem_size,
+                int (*cmp)(const void *, const void *))
+{
+  size_t n_bottom;
+  size_t n_top;
+  void *mid_p;
+  void *bottom;
+  void *top;
+
+  if (n_memb <= 1)
+  {
+    /* Too small to sort. */
+    return;
+  }
+  /* Sort the bottom half and the top half. */
+  n_bottom = n_memb / 2;
+  n_top = n_memb - n_bottom;
+  mid_p = (char *)base + (n_bottom * elem_size);
+  merge_sort(base, n_bottom, elem_size, cmp);
+  merge_sort(mid_p, n_top, elem_size, cmp);
+  /* Make temporary copies of the sorted bottom half and top half. */
+  bottom = malloc(n_bottom * elem_size);
+  top = malloc(n_top * elem_size);
+  memcpy(bottom, base, n_bottom * elem_size);
+  memcpy(top, mid_p, n_top * elem_size);
+  /* Do a sorted merge of the copies into the original. */
+  merge(base, bottom, n_bottom, top, n_top, elem_size, cmp);
+  /* Free temporary copies. */
+  free(bottom);
+  free(top);
+}
+
+// Recursive function to get the frequency probabilities of a trie
+void get_freq(trie_node_t *root, char *string, int *level,
+               int *num_strings, int *sum_freq, char *stub,
+               str_prob_t *str_prob_arr)
 {
 
   // Exit condition
   if (root == NULL)
-  { 
+  {
     return;
   }
-  // Print the roots char as it is visited
-  //printf("%c\n", root->c);
-
-  if(root->c != LEAF_NODE_CHAR)
+  // Add to string
+  if (root->c != LEAF_NODE_CHAR)
   {
-    
-    string = realloc(string, sizeof(char)*((*level)+2));
-    
+
     string[*level] = root->c;
-    string[(*level) + 1] = EOS;
+    string[*level + 1] = EOS;
   }
-    
 
-
-  if(root->c == LEAF_NODE_CHAR)
+  // Push results to array
+  if (root->c == LEAF_NODE_CHAR)
   {
-    //Implement a level system to fill in the string, which is then passed into
-    // the create node, which will be added to the array, at the end the array maky
-    //be scanned and evaluated
-    //str_freq_t* str_freq_node = create_str_freq_node(root->freq)
+    char tmp[MAX_STRING_SIZE];
+    strcpy(tmp, stub);
+    strcat(tmp, string);
 
-    string[*level] = EOS;
-    //str_freq_arr = realloc(str_freq_arr, (++*num_strings)*sizeof(str_freq_t));
-  
-    num_strings++;   
+    str_prob_arr[(*num_strings)].prob = (float)root->freq / (*sum_freq);
+    strcpy(str_prob_arr[(*num_strings)].string, tmp);
 
+    (*num_strings)++;
   }
-
 
   // For each char traverse to child char in alphabetical order
   for (int i = 0; i < NUM_CHARS; i++)
   {
-    // TODO: Add this effciency upgrade if it works root -> c != LEAF_NODE_CHAR
-    if ( root->character[i] != NULL)
+    // Go to next char if exists
+    if (root->character[i] != NULL)
     {
       (*level)++;
-      get_freq(root->character[i], str_freq_crawler, string , level, num_strings);
+      get_freq(root->character[i], string, level, num_strings, sum_freq, stub, str_prob_arr);
     }
   }
-
+  // Base case goes back one level
   (*level)--;
 }
 
-
-
-str_freq_t* create_str_freq_node(int freq, char* string)
-{
-  str_freq_t* str_freq_node = (str_freq_t *)malloc(sizeof(str_freq_t));
-
-  str_freq_node->freq = freq;
-  str_freq_node->string = malloc(sizeof(char)*strlen(string));
-  strcpy(str_freq_node->string,string);
-  str_freq_node->next = NULL;
-
-  return str_freq_node;
-}
-
-
-trie_node_t* traverse_to(trie_node_t* root, char* stub)
+// Returns the last node of the string char assuming it exists in the
+//  given char trie
+trie_node_t *traverse_to(trie_node_t *root, char *stub)
 {
   trie_node_t *node_crawler = root;
   int index;
 
-  for(int i = 0; i < strlen(stub)-1; i++)
+  // For each letter in stub
+  for (int i = 0; i < strlen(stub) - 1; i++)
   {
+    // convert to an index
     if (stub[i] == LEAF_NODE_CHAR)
     {
       index = EOS_INDEX;
@@ -428,58 +503,9 @@ trie_node_t* traverse_to(trie_node_t* root, char* stub)
     {
       index = CHAR_TO_INDEX(stub[i]);
     }
+    // Crawl onwards
     node_crawler = node_crawler->character[index];
   }
+  // return the node
   return node_crawler;
-
 }
-
-
-char* get_string()
-{
-
-  char c;
-  char* string = NULL;
-  int j = 0;
-  bool isEnd = false;
-
-  // For each char in each word
-  while (!isEnd)
-  {
-    c = getchar();
-    isEnd = append_char(&string, c, &j);
-  }
-
-  append_char(&string, LEAF_NODE_CHAR, &j);
-  append_char(&string, EOS, &j);
-
-  return string;
-}
-
-bool append_char(char** string, char c, int* j)
-{
-
-  // String ended
-  if (c == '\n' || c == ' ')
-  {
-    return true;
-  }
-
-  // If string is empty then give it some memory
-  if (*string == NULL)
-  {
-    *string = malloc(sizeof(char) * (*j + 1));
-  }
-  else
-  {
-    // Dynamically add memory for each chare
-    *string = realloc(*string, sizeof(char) * (*j + 1));
-  }
-
-  (*string)[*j] = c;
-  (*j)++;
-
-  return false;
-}
-
-

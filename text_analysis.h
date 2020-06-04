@@ -9,7 +9,9 @@
 #ifndef TEXT_ANALYSIS_H
 #define TEXT_ANALYSIS_H
 #define NUM_CHARS 27
+#define MAX_SIZE 100
 #include <stdbool.h>
+#include <stddef.h>
 
 struct Trie_node
 {
@@ -19,15 +21,17 @@ struct Trie_node
 
 };
 
-struct Str_freq
+struct Str_prob
 {
-    char* string;
-    int freq;
-    struct Str_freq* next;
+    double prob;
+    char string[MAX_SIZE];
+
 };
 
+
+
 typedef struct Trie_node trie_node_t;
-typedef struct Str_freq str_freq_t;
+typedef struct Str_prob str_prob_t;
 
 
 // Build a character level trie for a given set of words.
@@ -98,8 +102,9 @@ void problem_2_c();
 bool append_char(char** string, char c, int *j);
 char* get_string();
 trie_node_t* traverse_to(trie_node_t* root, char* stub);
-
-void get_freq(trie_node_t *root, str_freq_t* str_freq_arr, char* string, int *level, int *num_strings);
-str_freq_t *create_str_freq_node(int freq, char* string);
-
+void get_freq(trie_node_t *root, char* string, int* level, int* num_strings, int* sum_freq, char* stub, str_prob_t* str_prob_arr);
+void merge(void *out, const void *pa, size_t na, const void *pb, size_t nb, size_t elem_size, 
+                    int (*cmp)(const void *, const void *));
+void merge_sort(void *base, size_t n_memb, size_t elem_size, int (*cmp)(const void *, const void *));
+int prob_comp(const void* a, const void* b);
 #endif

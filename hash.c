@@ -3,17 +3,16 @@
  *
  * created for COMP20007 Design of Algorithms 2020
  * template by Tobias Edwards <tobias.edwards@unimelb.edu.au>
- * implementation by <Insert Name Here>
+ * implementation by Edward Marozzi - 910193
  */
-//TODO: get rid of this command
-//pscp *.c *.h Makefile emarozzi@dimefox.eng.unimelb.edu.au:COMP20007/A2/
-
 #include "hash.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
 #include <stddef.h>
+#define POW2_6 64
+#define CHAR_OFFSET 26
 
 // Implements a solution to Problem 1 (a), which reads in from stdin:
 //   N M
@@ -114,7 +113,7 @@ void calculate_hash(h_string_t *h_string, int m)
 
   for (k = 1; k < h_string->size; k++)
   {
-    sum = ((sum * 64 % m) + character_mapping(h_string->string_arr[k]) % m);
+    sum = ((sum * POW2_6 % m) + character_mapping(h_string->string_arr[k]) % m);
   }
   sum = sum % m;
 
@@ -131,7 +130,7 @@ int character_mapping(char c)
   }
   else if (is_upper(c))
   {
-    c = c - 'A' + 26;
+    c = c - 'A' + CHAR_OFFSET;
   }
   else
   {

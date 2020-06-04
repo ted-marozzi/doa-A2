@@ -16,7 +16,7 @@
             "args": [
                 "p2c",
                 "<",
-                "tests/p2c-in-1.txt"
+                "tests/p2c-in-4.txt"
 
             ],
             "type": "shell",
