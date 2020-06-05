@@ -1,41 +1,30 @@
 {
     "version": "2.0.0",
     "tasks": [
-        {
-            "group": "build",
-            "label": "make",
-            "command": "mingw32-make",
-            "type": "shell",
-            "problemMatcher": []
-        },
-        {
-            
-            "group": "build",
-            "label": "run",
-            "command": "a2.exe",
-            "args": [
-                "p2c",
-                "<",
-                "tests/p2c-in-4.txt"
-
-            ],
-            "type": "shell",
-            "problemMatcher": [],
-            "dependsOn": ["make"]
-        },
-        {
-            
-            "group": "build",
-            "label": "clean",
-            "command": "del",
-            "args": [
-                "*.o",
-
-            ],
-            "type": "shell",
-            "problemMatcher": [],
+      {
+        "type": "shell",
+        "label": "make",
+        "command": "make",
+        "problemMatcher": ["$gcc"],
+        "group": "build"
+      },
+      {
+        "type": "shell",
+        "label": "run",
+        "dependsOn":"make",
+        "command": "./a2 p1a < ${workspaceFolder}/tests/p1a-in-1.txt",
+        "problemMatcher": ["$gcc"],
+        "group": "build"
         
-        }
+      },
+      {
+        "type": "shell",
+        "label": "clean",
+        "command": "make clean",
+        "problemMatcher": ["$gcc"],
+        "group": "build"
+      }
+
 
     ]
-}
+  }

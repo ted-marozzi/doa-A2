@@ -79,6 +79,7 @@ void pre_order_trieversal(trie_node_t *root)
   // Print the roots char as it is visited
   printf("%c\n", root->c);
 
+
   // For each char traverse to child char in alphabetical order
   for (int i = 0; i < NUM_CHARS; i++)
   {
